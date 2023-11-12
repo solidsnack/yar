@@ -1,0 +1,67 @@
+README.md: |+2
+  # Archive Example
+
+  This is an example of a file archive as a YAML document. Only scalar, string
+  (or binary) keys are allowed; values can be maps (for directories) or
+  string or binary scalars.
+
+
+  All file contents are stored using [block scalars]. If the file is plain
+  text, it is a plain text block scalar; if it is binary, then YAML's
+  [`!!binary`](https://yaml.org/type/binary.html) data type is used and the
+  data is also placed in a block scalar.
+
+  The [block scalar] can be represented potentially many ways. We always:
+
+  * Use [literal] block scalars, with `|`.
+
+  Additionally, for plain text file contents, we always:
+
+  * Supply the [indentation indicator], with a value of `2`.
+  * Supply the [chomping indicator], using `+` unless there is no final newline
+    or other whitespace -- in that case, we use `-`.
+
+  [block scalar]: https://yaml.org/spec/1.2.2/#81-block-scalar-styles
+  [block scalars]: https://yaml.org/spec/1.2.2/#81-block-scalar-styles
+  [literal]: https://yaml.org/spec/1.2.2/#812-literal-style
+  [indentation indicator]: https://yaml.org/spec/1.2.2/#8111-block-indentation-indicator
+  [chomping indicator]: https://yaml.org/spec/1.2.2/#8112-block-chomping-indicator
+
+  The use of the block level scalar for all contents eliminates infelicities
+  that can result from files which themselves contain YAML, or contain text
+  strings that are all digits or match YAML literals. For filenames, however,
+  quoting must occassionally be used. When quoting is used, it is always
+  *double quoting* and never single quoting.
+
+  The software uses, and we recommend, a parser configured for the failsafe
+  YAML schema. Only one explicitly tagged type ever needs to be resolved:
+  `!!binary`.
+cowsay-yaml: !!binary |
+  ICBfX19fCjwgeWFtbCA+CiAgLS0tLQogICAgICAgICBcICAgXl9fXgogICAgICAg
+  ICAgXCAgKG9vKVxfX19fX19fCiAgICAgICAgICAgICAoX18pXCAgICAgICApXC9c
+  XAogICAgICAgICAgICAgICAgIHx8LS0tLXcgfAogICAgICAgICAgICAgICAgIHx8
+  ICAgICB8fAo=
+directory-examples:
+  final-newline: |+2
+    A file ending with a newline.
+  "yes": |+2
+    A file named `yes`.
+  true: |-2
+    99
+  !!binary AA==: |-2
+    0
+  7: |+2
+    yes
+  empty-file: |-2
+
+  data.yaml: |+2
+    as-of: 2021-04-07T14:15:15Z
+    items:
+      - apples: 1
+      - banannas: 2
+      - cherimoyas: 4
+  right-justified: |+2
+                               The Fisherman & The Sea
+
+    Once upon a time, there was a fisherman who lived
+    near the sea.
